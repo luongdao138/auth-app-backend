@@ -3,8 +3,9 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+// const session = require('express-session');
+// const MongoStore = require('connect-mongo');
+const cookieSession = require('cookie-session');
 const passport = require('./passport');
 
 app.use(
@@ -19,21 +20,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // session store
-const sessionStore = MongoStore.create({
-  mongoUrl: process.env.MONGODB_URI,
-  collectionName: 'sessions',
-});
+// const sessionStore = MongoStore.create({
+//   mongoUrl: process.env.MONGODB_URI,
+//   collectionName: 'sessions',
+// });
+// app.use(
+//   session({
+//     resave: false,
+//     saveUninitialized: false,
+//     secret: 'session_secret',
+//     cookie: {
+//       maxAge: 1000 * 60 * 60 * 24,
+//       sameSite: 'none',
+//       httpOnly: true, // 1 day
+//     },
+//     store: sessionStore,
+//   })
+// );
 app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: 'session_secret',
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24,
-      sameSite: 'none',
-      httpOnly: true, // 1 day
-    },
-    store: sessionStore,
+  cookieSession({
+    name: 'session',
+    keys: ['luong', 'huong'],
   })
 );
 
