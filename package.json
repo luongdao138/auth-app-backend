@@ -9,8 +9,7 @@
   "author": "Dao Van Luong",
   "license": "MIT",
   "devDependencies": {
-    "nodemon": "^2.0.12",
-    "dotenv": "^10.0.0"
+    "nodemon": "^2.0.12"
   },
   "dependencies": {
     "cloudinary": "^1.26.3",
@@ -27,6 +26,7 @@
     "mongoose": "^5.13.5",
     "nodemon": "^2.0.12",
     "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "dotenv": "^10.0.0"
   }
 }
