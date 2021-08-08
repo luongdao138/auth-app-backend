@@ -1,4 +1,4 @@
-const domain = 'https://luong-auth-app.herokuapp.com';
+const domain = 'https://luong-auth-app-2.herokuapp.com';
 // const domain = 'http://localhost:5000';
 
 module.exports = {
