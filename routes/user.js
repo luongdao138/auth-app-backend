@@ -6,6 +6,8 @@ const convertTo64 = require('../helpers/convertToBase64');
 const User = require('../models/User');
 
 const validateUser = (req, res, next) => {
+  console.log(req.session);
+  console.log(req.user);
   if (req.isAuthenticated()) {
     next();
   } else {
