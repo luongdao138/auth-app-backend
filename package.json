@@ -4,12 +4,12 @@
   "description": "This is authentication app",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Dao Van Luong",
   "license": "MIT",
   "devDependencies": {
-    "node": "^2.0.12"
+    "nodemon": "^2.0.12"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
