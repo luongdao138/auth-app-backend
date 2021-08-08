@@ -9,7 +9,7 @@
   "author": "Dao Van Luong",
   "license": "MIT",
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "node": "^2.0.12"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
