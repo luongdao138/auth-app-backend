@@ -22,14 +22,14 @@ mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
-const db = mongoose.connection;
-db.on('error', (error) => {
-  console.log(error);
-  process.exit(1);
-});
-db.on('open', () => {
-  console.log('connected db successfully!');
-});
+// const db = mongoose.connection;
+// db.on('error', (error) => {
+//   console.log(error);
+//   process.exit(1);
+// });
+// db.on('open', () => {
+//   console.log('connected db successfully!');
+// });
 
 // middlewares
 app.use(express.json());
