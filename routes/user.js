@@ -4,19 +4,13 @@ const bcrypt = require('bcryptjs');
 const imageHelper = require('../helpers/cloudinary');
 const convertTo64 = require('../helpers/convertToBase64');
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const validateUser = require('../middlewares/verifyToken');
 
-const validateUser = (req, res, next) => {
-  console.log(req.session);
-  console.log(req.user);
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.status(401).json('Unauthorized!');
-  }
-};
 router.use(validateUser);
 
 router.get('/', (req, res) => {
+  // req.headers
   return res.json(req.user);
 });
 

@@ -1,91 +1,40 @@
 const router = require('express').Router();
-const passport = require('../passport');
+const { OAuth2Client } = require('google-auth-library');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
-router.get('/logout', (req, res) => {
-  req.logOut();
-  return res.json('logout successfully!');
-});
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+router.post('/google', async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    // get token from request
 
-router.post('/signup', (req, res) => {
-  passport.authenticate('local-signup', (error, user, info) => {
-    if (error)
-      return res.status(400).json({
-        message: error.message || 'Internal server error',
-      });
-
-    req.logIn(user, (err) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: 'Internal server error',
-        });
-      }
-
-      return res.json(user);
+    // verify token
+    const response = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
-  })(req, res);
-});
-
-router.post('/login', (req, res) => {
-  passport.authenticate('local-login', (error, user, info) => {
-    if (error)
-      return res.status(400).json({
-        message: error.message || 'Internal server error',
-      });
-
-    req.logIn(user, (err) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: 'Internal server error',
-        });
-      }
-
-      return res.json(user);
+    const { email, sub, picture, name } = response.getPayload();
+    let user = await User.findOne({ social_id: sub });
+    if (user) {
+      const token = jwt.sign({ _id: user._id }, process.env.CLIENT_SECRET);
+      return res.json({ token, user });
+    }
+    user = new User({
+      social_id: sub,
+      email,
+      display_name: name,
+      photo: picture,
     });
-  })(req, res);
+    user = await user.save();
+    const token = jwt.sign({ _id: user._id }, process.env.CLIENT_SECRET);
+    return res.json({ token, user });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      message: 'Google login failed!',
+    });
+  }
 });
-
-router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope: ['email', 'profile'],
-  })
-);
-router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    successRedirect: 'http://localhost:3000/profile',
-    failureRedirect: 'http://localhost:3000/login',
-  })
-);
-
-router.get(
-  '/facebook',
-  passport.authenticate('facebook', {
-    scope: ['email', 'profile'],
-  })
-);
-router.get(
-  '/facebook/callback',
-  passport.authenticate('facebook', {
-    successRedirect: 'http://localhost:3000/profile',
-    failureRedirect: 'http://localhost:3000/login',
-  })
-);
-
-router.get(
-  '/github',
-  passport.authenticate('github', {
-    scope: ['user:email'],
-  })
-);
-router.get(
-  '/github/callback',
-  passport.authenticate('github', {
-    successRedirect: 'http://localhost:3000/profile',
-    failureRedirect: 'http://localhost:3000/login',
-  })
-);
 
 module.exports = router;
