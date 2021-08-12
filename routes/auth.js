@@ -53,12 +53,15 @@ router.post('/google', async (req, res) => {
   try {
     const { idToken } = req.body;
     // get token from request
+    console.log('Get id token', idToken);
 
     // verify token
     const response = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
+    console.log('Response', response);
     const { email, sub, picture, name } = response.getPayload();
     let user = await User.findOne({ social_id: sub });
     if (user) {
